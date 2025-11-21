@@ -274,3 +274,41 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
+/* Add these to your existing Auth.css */
+
+/* Reset Demo Button */
+.reset-demo-btn {
+  padding: 0.5rem 1rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.reset-demo-btn:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.reset-demo-btn:active {
+  transform: translateY(0);
+}
+
+.reset-btn-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Mobile Styles for Reset Button */
+@media (max-width: 767px) {
+  .reset-demo-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}

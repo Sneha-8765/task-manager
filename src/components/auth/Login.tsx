@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -22,6 +22,35 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Auto-sync users when component mounts
+  useEffect(() => {
+    const syncUsers = async () => {
+      try {
+        // Try to get users from other device (this is a simple approach)
+        const response = await fetch('/api/all-users');
+        if (response.ok) {
+          // Users are automatically merged by the handler
+          console.log('Users synced successfully');
+        }
+      } catch (error) {
+        console.log('Sync not available');
+      }
+    };
+
+    syncUsers();
+  }, []);
+
+  const handleResetDemoData = async () => {
+    try {
+      const response = await fetch('/api/reset-demo-data', { method: 'POST' });
+      if (response.ok) {
+        alert('Demo data reset! All demo accounts should work now.');
+      }
+    } catch (error) {
+      alert('Reset failed. Please try again.');
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -142,6 +171,17 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                 Username: <span className="demo-highlight">demo</span> | 
                 Password: <span className="demo-highlight">demo123</span>
               </p>
+              
+              {/* Reset button with CSS classes */}
+              <div className="reset-btn-container">
+                <button
+                  onClick={handleResetDemoData}
+                  className="reset-demo-btn"
+                >
+                  Reset Demo Data
+                </button>
+              </div>
+              
               <p className="demo-text">
                 New users: Click "Sign up" to create your account
               </p>

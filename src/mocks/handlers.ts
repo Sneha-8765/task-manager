@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { getMockUsers, getMockTasks, saveMockUsers, saveMockTasks, initializeMockData, getDemoUsers } from './data';
-import type { LoginCredentials, RegisterData, CreateTaskData, Task } from '../types';
+import type { LoginCredentials, RegisterData, CreateTaskData, Task, User } from '../types';
 
 // Initialize mock data on first load
 initializeMockData();
@@ -72,6 +72,37 @@ export const handlers = [
       message: 'Demo data reset successfully',
       demoUsers: getDemoUsers().map(u => ({ username: u.username, password: u.password }))
     });
+  }),
+
+  // Add this handler to sync users between devices
+  http.post('/api/sync-users', async ({ request }) => {
+    const { users } = await request.json() as { users: User[] };
+    
+    const currentUsers = getMockUsers();
+    
+    // Merge users - avoid duplicates
+    const mergedUsers = [...currentUsers];
+    
+    users.forEach(newUser => {
+      const exists = mergedUsers.some(user => user.username === newUser.username);
+      if (!exists) {
+        mergedUsers.push(newUser);
+      }
+    });
+    
+    saveMockUsers(mergedUsers);
+    
+    return HttpResponse.json({ 
+      success: true, 
+      message: `Synced ${users.length} users`,
+      totalUsers: mergedUsers.length 
+    });
+  }),
+
+  // Get all users (for syncing)
+  http.get('/api/all-users', () => {
+    const users = getMockUsers();
+    return HttpResponse.json(users);
   }),
 
   // Mock tasks endpoints
