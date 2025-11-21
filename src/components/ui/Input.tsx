@@ -1,25 +1,41 @@
 import React from 'react';
+import './Input.css';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  fullWidth?: boolean;
+  responsive?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, className = '', ...props }) => {
+export const Input: React.FC<InputProps> = ({ 
+  label, 
+  error, 
+  fullWidth = true,
+  responsive = true,
+  className = '', 
+  ...props 
+}) => {
+  const inputClasses = [
+    'input',
+    fullWidth ? 'input-full-width' : '',
+    responsive ? 'input-responsive' : '',
+    error ? 'input-error' : '',
+    className
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="w-full">
+    <div className={`input-container ${fullWidth ? 'input-container-full-width' : ''}`}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="input-label">
           {label}
         </label>
       )}
       <input
-        className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } ${className}`}
+        className={inputClasses}
         {...props}
       />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="input-error-text">{error}</p>}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { loginSuccess } from '../../store/authSlice';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import type { LoginCredentials } from '../../types';
+import './Auth.css';
 
 const loginSchema = Yup.object({
   username: Yup.string().required('Username is required'),
@@ -57,23 +58,23 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <div className="text-center">
-            <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <LogIn className="h-8 w-8 text-white" />
+    <div className="auth-container">
+      <div className="auth-content">
+        <div className="auth-card">
+          <div className="auth-header">
+            <div className="auth-icon-container">
+              <LogIn className="auth-icon" />
             </div>
-            <h2 className="mt-6 text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 className="auth-title">
               Welcome Back
             </h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="auth-subtitle">
               Sign in to your account to continue
             </p>
           </div>
           
-          <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
-            <div className="space-y-4">
+          <form className="auth-form" onSubmit={formik.handleSubmit}>
+            <div className="form-fields">
               <Input
                 label="Username"
                 type="text"
@@ -97,36 +98,46 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
             </div>
 
             {error && (
-              <div className="rounded-md bg-red-50 dark:bg-red-900/50 p-4">
-                <div className="text-sm text-red-700 dark:text-red-300">{error}</div>
+              <div className="auth-error">
+                <div className="error-text">{error}</div>
               </div>
             )}
 
-            <Button
+            <button
               type="submit"
-              loading={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-              icon={LogIn}
+              disabled={loading}
+              className={`auth-submit-btn ${loading ? 'loading' : ''}`}
             >
-              Sign in
-            </Button>
+              {loading ? (
+                'Signing In...'
+              ) : (
+                <>
+                  <LogIn size={18} />
+                  Sign in
+                </>
+              )}
+            </button>
 
-            <div className="text-center">
+            <div className="auth-switch">
               <button
                 type="button"
                 onClick={onSwitchToRegister}
-                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium"
+                className="switch-link"
               >
                 Don't have an account? Sign up
               </button>
             </div>
             
-<div className="text-center text-xs text-gray-500 dark:text-gray-400 space-y-1">
-  <p className="font-medium">Demo credentials:</p>
-  <p>Username: <strong>mike</strong> | Password: <strong>password123</strong></p>
-  <p className="text-xs opacity-75">New users: Click "Sign up" to create your account</p>
-</div>
-            
+            <div className="demo-credentials">
+              <p className="demo-title">Demo credentials:</p>
+              <p className="demo-text">
+                Username: <span className="demo-highlight">mike</span> | 
+                Password: <span className="demo-highlight">password123</span>
+              </p>
+              <p className="demo-text">
+                New users: Click "Sign up" to create your account
+              </p>
+            </div>
           </form>
         </div>
       </div>

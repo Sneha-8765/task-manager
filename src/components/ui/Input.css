@@ -1,0 +1,135 @@
+/* Input Container */
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container-full-width {
+  width: 100%;
+}
+
+/* Input Label */
+.input-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+.dark .input-label {
+  color: #d1d5db;
+}
+
+/* Base Input Styles */
+.input {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: white;
+  color: #1f2937;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-height: 44px; /* Touch-friendly minimum height */
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+/* Dark Mode */
+.dark .input {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: white;
+}
+
+.dark .input::placeholder {
+  color: #6b7280;
+}
+
+/* Input Modifiers */
+.input-full-width {
+  width: 100%;
+}
+
+.input-error {
+  border-color: #dc2626;
+}
+
+.input-error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.input-error-text {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 48px; /* Larger touch target on mobile */
+    padding: 0.75rem;
+  }
+  
+  .input-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Responsive input behavior */
+  .input-responsive {
+    width: 100%;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .input {
+    min-height: 44px;
+  }
+  
+  .input-responsive {
+    min-width: 200px;
+  }
+}
+
+/* Focus styles for accessibility */
+.input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.dark .input:disabled {
+  background: #374151;
+  color: #9ca3af;
+}
+
+/* Readonly state */
+.input:read-only {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.dark .input:read-only {
+  background: #111827;
+  border-color: #374151;
+}

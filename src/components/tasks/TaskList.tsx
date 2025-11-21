@@ -9,6 +9,7 @@ import { TaskForm } from './TaskForm';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
+import './TaskList.css';
 
 export const TaskList: React.FC = () => {
   const dispatch = useDispatch();
@@ -119,48 +120,56 @@ export const TaskList: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const EmptyStateIcon = () => (
+    <svg className="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    </svg>
+  );
+
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 space-y-4 sm:space-y-0">
+    <div className="task-list-container">
+      {/* Header */}
+      <div className="task-list-header">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Tasks</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">Manage your tasks efficiently</p>
+          <h1 className="task-list-title">My Tasks</h1>
+          <p className="task-list-subtitle">Manage your tasks efficiently</p>
         </div>
         <Button
           icon={Plus}
           onClick={() => setIsModalOpen(true)}
           size="lg"
+          className="add-task-btn"
         >
           Add New Task
         </Button>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-8 border border-gray-200 dark:border-gray-700">
-        <div className="flex flex-col md:flex-row gap-4 items-end">
-          <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <div className="filters-container">
+        <div className="filters-content">
+          <div className="filter-group">
+            <label className="filter-label">
               Search Tasks
             </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="search-input-container">
+              <Search className="search-icon" />
               <Input
                 placeholder="Search by title or description..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="search-input"
               />
             </div>
           </div>
           
-          <div className="w-full md:w-48">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="filter-group">
+            <label className="filter-label">
               Filter by Status
             </label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:text-white"
+              className="status-select"
               aria-label="Filter tasks by status"
             >
               <option value="all">All Status</option>
@@ -174,16 +183,12 @@ export const TaskList: React.FC = () => {
 
       {/* Tasks Grid */}
       {filteredTasks.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className="text-gray-400 dark:text-gray-500 mb-4">
-            <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        <div className="empty-state">
+          <EmptyStateIcon />
+          <h3 className="empty-title">
             No tasks found
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          <p className="empty-description">
             {searchTerm || statusFilter !== 'all' 
               ? 'No tasks match your search criteria. Try adjusting your filters.'
               : 'Get started by creating your first task to stay organized and productive.'
@@ -210,7 +215,7 @@ export const TaskList: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="tasks-grid">
           {filteredTasks.map(task => (
             <TaskCard
               key={task.id}
@@ -223,7 +228,7 @@ export const TaskList: React.FC = () => {
         </div>
       )}
 
-      {/* Create Task Modal */}
+      {/* Modals */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -235,7 +240,6 @@ export const TaskList: React.FC = () => {
         />
       </Modal>
 
-      {/* Edit Task Modal */}
       <Modal
         isOpen={!!editingTask}
         onClose={() => setEditingTask(null)}
