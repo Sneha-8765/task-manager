@@ -7,13 +7,12 @@ import './index.css'
 
 // Start the Mock Service Worker
 async function enableMocking() {
-  // Use Vite's import.meta.env for environment detection
-  if (import.meta.env.MODE !== 'development') {
-    return
+  // Enable MSW in development AND for Vercel deployments
+  if (import.meta.env.MODE === 'development' || 
+      window.location.hostname.includes('vercel.app')) {
+    const { worker } = await import('./mocks/browser')
+    return worker.start()
   }
-
-  const { worker } = await import('./mocks/browser')
-  return worker.start()
 }
 
 enableMocking().then(() => {
