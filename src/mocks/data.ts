@@ -42,6 +42,7 @@ export const initializeMockData = () => {
         email: 'mike@timetoprogram.com',
         firstName: 'Mike',
         lastName: 'Johnson',
+        password: 'password123', // ADD THIS LINE
         joinDate: '2024-01-15T10:00:00Z'
       }
     ];
