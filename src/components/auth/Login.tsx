@@ -135,6 +135,14 @@ export const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
                 Password: <span className="demo-highlight">password123</span>
               </p>
               <p className="demo-text">
+                Username: <span className="demo-highlight">sarah</span> | 
+                Password: <span className="demo-highlight">password123</span>
+              </p>
+              <p className="demo-text">
+                Username: <span className="demo-highlight">demo</span> | 
+                Password: <span className="demo-highlight">demo123</span>
+              </p>
+              <p className="demo-text">
                 New users: Click "Sign up" to create your account
               </p>
             </div>

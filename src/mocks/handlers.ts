@@ -7,71 +7,70 @@ initializeMockData();
 
 export const handlers = [
   // Mock register endpoint
-  // Mock register endpoint
-http.post('/api/register', async ({ request }) => {
-  const userData = await request.json() as RegisterData;
-  
-  const users = getMockUsers();
-  
-  // Check if user already exists
-  const existingUser = users.find(user => 
-    user.username === userData.username || user.email === userData.email
-  );
-  
-  if (existingUser) {
-    return HttpResponse.json(
-      { error: 'User already exists' },
-      { status: 400 }
+  http.post('/api/register', async ({ request }) => {
+    const userData = await request.json() as RegisterData;
+    
+    const users = getMockUsers();
+    
+    // Check if user already exists
+    const existingUser = users.find(user => 
+      user.username === userData.username || user.email === userData.email
     );
-  }
-  
-  const newUser = {
-    ...userData,
-    id: Date.now().toString(),
-    joinDate: new Date().toISOString()
-    // Note: In real app, you'd hash the password here
-  };
-  
-  const updatedUsers = [...users, newUser];
-  saveMockUsers(updatedUsers);
-  
-  const token = 'mock-jwt-token-' + Date.now();
-  return HttpResponse.json({
-    user: newUser,
-    token
-  });
-}),
-  // Mock login endpoint
-  // Mock login endpoint
-http.post('/api/login', async ({ request }) => {
-  const { username, password } = await request.json() as LoginCredentials;
-  
-  const users = getMockUsers();
-  const user = users.find(u => u.username === username);
-  
-  // Check if user exists and password matches
-  if (user) {
-    // For demo user 'mike', keep using 'password123'
-    // For new users, check the actual password they registered with
-    if (user.username === 'mike') {
-      if (password === 'password123') {
-        const token = 'mock-jwt-token-' + Date.now();
-        return HttpResponse.json({ user, token });
-      }
-    } else {
-      // For all other users, check the actual password
-      if (password === user.password) {
-        const token = 'mock-jwt-token-' + Date.now();
-        return HttpResponse.json({ user, token });
-      }
+    
+    if (existingUser) {
+      return HttpResponse.json(
+        { error: 'User already exists' },
+        { status: 400 }
+      );
     }
-  }
-  
-  return HttpResponse.json(
-    { error: 'Invalid credentials' },
-    { status: 401 }
-  );
-}),
+    
+    const newUser = {
+      ...userData,
+      id: Date.now().toString(),
+      joinDate: new Date().toISOString()
+    };
+    
+    const updatedUsers = [...users, newUser];
+    saveMockUsers(updatedUsers);
+    
+    const token = 'mock-jwt-token-' + Date.now();
+    return HttpResponse.json({
+      user: newUser,
+      token
+    });
+  }),
+
+  // Mock login endpoint - Simplified version
+  http.post('/api/login', async ({ request }) => {
+    const { username, password } = await request.json() as LoginCredentials;
+    
+    const users = getMockUsers();
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+      const token = 'mock-jwt-token-' + Date.now();
+      return HttpResponse.json({ 
+        user, 
+        token 
+      });
+    }
+    
+    return HttpResponse.json(
+      { error: 'Invalid credentials' },
+      { status: 401 }
+    );
+  }),
+
+  // Initialize mock data on app start
+  http.post('/api/init-mock-data', async () => {
+    const currentUsers = getMockUsers();
+    
+    // This will ensure consistent users are added by initializeMockData()
+    initializeMockData();
+    
+    return HttpResponse.json({ success: true });
+  }),
+
   // Mock tasks endpoints
   http.get('/api/tasks', ({ request }) => {
     const url = new URL(request.url);

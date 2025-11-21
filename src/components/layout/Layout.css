@@ -6,12 +6,12 @@
 
 .layout-content {
   flex: 1;
-  padding: 1rem 0;
+  padding-top: 80px; /* Prevent header overlap */
 }
 
 /* Mobile */
 @media (max-width: 767px) {
   .layout-content {
-    padding: 0.5rem 0;
+    padding-top: 70px; /* Adjust for mobile header height */
   }
 }

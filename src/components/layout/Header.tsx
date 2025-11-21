@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
                 onClick={toggleDarkMode}
                 title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
-                {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+                {darkMode ? <Sun size={15} /> : <Moon size={15} />}
                 <span className="btn-text">
                   {darkMode ? 'Light Mode' : 'Dark Mode'}
                 </span>
@@ -75,7 +75,7 @@ export const Header: React.FC = () => {
                 onClick={handleLogout}
                 title="Logout"
               >
-                <LogOut size={18} />
+                <LogOut size={15} />
                 <span className="btn-text">Logout</span>
               </button>
             </div>
