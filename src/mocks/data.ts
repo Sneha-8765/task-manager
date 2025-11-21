@@ -29,8 +29,8 @@ const storage = {
   }
 };
 
-// Consistent mock users that work across all devices
-const consistentMockUsers: User[] = [
+// ALWAYS available demo users - these will work on ALL devices
+const DEMO_USERS: User[] = [
   {
     id: '1',
     firstName: 'Mike',
@@ -62,22 +62,19 @@ const consistentMockUsers: User[] = [
 
 // Initialize with default data if empty
 export const initializeMockData = () => {
+  if (typeof window === 'undefined') return;
+  
   const existingUsers = storage.getUsers();
   const existingTasks = storage.getTasks();
   
-  // Add consistent users if they don't exist
-  if (existingUsers.length === 0) {
-    storage.saveUsers([...consistentMockUsers]);
-  } else {
-    // Check if any consistent users are missing and add them
-    const usersToAdd = consistentMockUsers.filter(consistentUser => 
-      !existingUsers.some(user => user.username === consistentUser.username)
-    );
-    
-    if (usersToAdd.length > 0) {
-      const updatedUsers = [...existingUsers, ...usersToAdd];
-      storage.saveUsers(updatedUsers);
-    }
+  // ALWAYS ensure demo users exist, regardless of existing data
+  const usersToAdd = DEMO_USERS.filter(demoUser => 
+    !existingUsers.some(user => user.username === demoUser.username)
+  );
+  
+  if (usersToAdd.length > 0) {
+    const updatedUsers = [...existingUsers, ...usersToAdd];
+    storage.saveUsers(updatedUsers);
   }
   
   if (existingTasks.length === 0) {
@@ -123,7 +120,22 @@ export const initializeMockData = () => {
 };
 
 // Export functions to get and update data
-export const getMockUsers = (): User[] => storage.getUsers();
+export const getMockUsers = (): User[] => {
+  const storedUsers = storage.getUsers();
+  
+  // ALWAYS return demo users + stored users, ensuring demo users take priority
+  const demoUsersInStorage = DEMO_USERS.map(demoUser => {
+    const storedUser = storedUsers.find(u => u.username === demoUser.username);
+    return storedUser || demoUser; // Use stored version if exists, otherwise use demo
+  });
+  
+  const otherUsers = storedUsers.filter(user => 
+    !DEMO_USERS.some(demoUser => demoUser.username === user.username)
+  );
+  
+  return [...demoUsersInStorage, ...otherUsers];
+};
+
 export const getMockTasks = (): Task[] => storage.getTasks();
 
 export const saveMockUsers = (users: User[]): void => {
@@ -133,3 +145,6 @@ export const saveMockUsers = (users: User[]): void => {
 export const saveMockTasks = (tasks: Task[]): void => {
   storage.saveTasks(tasks);
 };
+
+// Export demo users for direct access
+export const getDemoUsers = (): User[] => DEMO_USERS;

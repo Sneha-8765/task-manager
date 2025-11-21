@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { getMockUsers, getMockTasks, saveMockUsers, saveMockTasks, initializeMockData } from './data';
+import { getMockUsers, getMockTasks, saveMockUsers, saveMockTasks, initializeMockData, getDemoUsers } from './data';
 import type { LoginCredentials, RegisterData, CreateTaskData, Task } from '../types';
 
 // Initialize mock data on first load
@@ -40,7 +40,7 @@ export const handlers = [
     });
   }),
 
-  // Mock login endpoint - Simplified version
+  // Mock login endpoint - This will now ALWAYS work with demo users
   http.post('/api/login', async ({ request }) => {
     const { username, password } = await request.json() as LoginCredentials;
     
@@ -61,14 +61,17 @@ export const handlers = [
     );
   }),
 
-  // Initialize mock data on app start
-  http.post('/api/init-mock-data', async () => {
-    const currentUsers = getMockUsers();
-    
-    // This will ensure consistent users are added by initializeMockData()
+  // Force reset demo data endpoint (useful for testing)
+  http.post('/api/reset-demo-data', async () => {
+    localStorage.removeItem('mockUsers');
+    localStorage.removeItem('mockTasks');
     initializeMockData();
     
-    return HttpResponse.json({ success: true });
+    return HttpResponse.json({ 
+      success: true, 
+      message: 'Demo data reset successfully',
+      demoUsers: getDemoUsers().map(u => ({ username: u.username, password: u.password }))
+    });
   }),
 
   // Mock tasks endpoints
